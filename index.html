@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switchboard - keyboard switch feel guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F6F8; --surface:#FFFFFF; --border:#E2E4E9; --ink:#1B1D22; --ink-soft:#5B5F6B; --ink-faint:#9198A6;
+    --linear:#3B6FD6; --linear-bg:#E9F0FD;
+    --tactile:#C97A1E; --tactile-bg:#FBF0DF;
+    --clicky:#D14B3E; --clicky-bg:#FBEAE8;
+    --magnetic:#7C5CD6; --magnetic-bg:#F1ECFC;
+    --radius:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#111318; --surface:#181B21; --border:#2A2E37; --ink:#F2F3F5; --ink-soft:#9AA0AC; --ink-faint:#6B7280;
+      --linear:#6C9BEF; --linear-bg:#182640;
+      --tactile:#E3A24C; --tactile-bg:#3A2A12;
+      --clicky:#E67A6E; --clicky-bg:#3B1C18;
+      --magnetic:#A78BF0; --magnetic-bg:#241A3D;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',system-ui,sans-serif; line-height:1.55;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; font-weight:600; margin:0;}
+  .wrap{max-width:1040px; margin:0 auto; padding:48px 24px 80px;}
+  header{margin-bottom:28px;}
+  header h1{font-size:30px; letter-spacing:-0.01em;}
+  header p{color:var(--ink-soft); font-size:15px; max-width:560px; margin:10px 0 0;}
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin:22px 0 28px; font-size:13px; color:var(--ink-soft);}
+  .legend span{display:flex; align-items:center; gap:6px;}
+  .legend i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px;}
+  .key{
+    background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--k-color);
+    border-radius:8px; padding:12px 6px 9px; cursor:pointer; position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    min-height:78px; text-align:center;
+    box-shadow:0 2px 0 var(--border);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .key:hover{transform:translateY(-2px); box-shadow:0 4px 0 var(--border), 0 6px 12px rgba(0,0,0,.06);}
+  .key:active{transform:translateY(1px); box-shadow:0 1px 0 var(--border);}
+  .key:focus-visible{outline:2px solid var(--k-color); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ .key{transition:none;} .key:hover{transform:none;} }
+  .key .pos{position:absolute; top:4px; left:6px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint);}
+  .key .name{font-size:11.5px; font-weight:500; line-height:1.25;}
+  .key.yours{box-shadow:0 0 0 2px var(--k-color), 0 2px 0 var(--border);}
+  .key.yours:hover{box-shadow:0 0 0 2px var(--k-color), 0 6px 12px rgba(0,0,0,.06);}
+  .key .star{position:absolute; top:4px; right:6px; font-size:9px; color:var(--k-color); font-family:'JetBrains Mono',monospace;}
+
+  .overlay{position:fixed; inset:0; background:rgba(10,10,12,.5); display:none; align-items:center; justify-content:center; padding:20px; z-index:10;}
+  .overlay.open{display:flex;}
+  .modal{background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:460px; width:100%; padding:26px 26px 22px; position:relative; max-height:86vh; overflow-y:auto;}
+  .modal .close{position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:var(--bg); color:var(--ink-soft); cursor:pointer; font-size:15px; line-height:1;}
+  .modal .pos-tag{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint);}
+  .modal h2{font-size:21px; margin-top:4px;}
+  .badges{display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 16px;}
+  .badge{font-size:11px; padding:4px 10px; border-radius:20px; font-weight:500;}
+  .modal p{font-size:14px; color:var(--ink-soft); margin:0 0 14px;}
+  .modal .section-label{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin:0 0 6px; font-weight:500;}
+  .likes{display:flex; flex-wrap:wrap; gap:6px;}
+  .likes .chip{font-size:12px; padding:4px 10px; border-radius:20px; background:var(--bg); border:1px solid var(--border); color:var(--ink);}
+  .likes .empty{font-size:13px; color:var(--ink-faint); font-style:italic;}
+
+  footer{margin-top:40px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--ink-faint);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Switchboard</h1>
+    <p>All 100 switches from the tester, sorted the way it actually feels. Click any key to see what it's made of, who uses it, and who around here likes it.</p>
+    <div class="legend">
+      <span><i style="background:var(--linear)"></i>Linear - smooth, no bump</span>
+      <span><i style="background:var(--tactile)"></i>Tactile - bump before click</span>
+      <span><i style="background:var(--clicky)"></i>Clicky - bump plus audible click</span>
+      <span><i style="background:var(--magnetic)"></i>Magnetic - hall effect, tuned in software</span>
+    </div>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>Curated by Matticus. Want to add a name to a switch, or a new tester to the roster? Just ask Claude to update this file.</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// ---- Friend roster (reference only - edit LIKES below to record who likes what) ----
+const FRIENDS = ["Matticus","Katelyn","Dan","Cam","Kassidy","Vanessa"];
+
+// ---- Who likes what. Only edit this by hand (or ask Claude to). Empty = no votes yet. ----
+const LIKES = {
+  // "7-2": ["Katelyn","Dan"],
+};
+
+const TYPE_LABEL = {L:"Linear", T:"Tactile", C:"Clicky", M:"Magnetic"};
+const WEIGHT_LABEL = {l:"Light", m:"Medium", h:"Heavy", a:"Adjustable"};
+const TYPE_COLOR = {L:"linear", T:"tactile", C:"clicky", M:"magnetic"};
+
+const DESCRIPTIONS = {
+  kySuper:"Keychron's entry-level in-house switch. Straightforward and consistent, not much personality beyond that.",
+  kySilk:"Uses a smoother POM plastic housing for a quieter, slightly muted sound versus Keychron's standard line.",
+  kyKPro:"The switch that ships stock in most Keychron boards. A dependable baseline most people never think to swap.",
+  kySilentKPro:"Same core feel as K Pro, with dampening built in so the bottom-out lands softer and quieter.",
+  kyMahjong:"A novelty switch with an unusually deep, hollow bottom-out sound. More collector's piece than daily driver.",
+  kyLime:"Magnetic hall effect switch. Actuation point is set in software, not fixed by the spring, so it can feel lighter or heavier depending on configuration.",
+  gaJupiter:"Gateron's mid-tier line, factory lubed for a noticeably smoother stroke than typical budget switches.",
+  gaPhantom:"A budget-friendly Gateron line built for consistency over character.",
+  gaGPro3:"Gateron's current flagship line, and the switch most enthusiast pre-builts ship with. Smooth out of the bag.",
+  gaJade:"Factory lubed for a glassy, low-friction downstroke with minimal scratch.",
+  gaInk:"Gateron's premium line. A denser plastic blend gives it a deeper, more muted sound than standard switches.",
+  gaOilKing:"One of the most talked-about linear switches in the hobby right now. Silky and pre-lubed from the factory.",
+  gaSmoothie:"Tuned specifically around a buttery, low-friction feel. Does what the name promises.",
+  gaNorthPole:"A cooler, crisper feeling linear line compared to Gateron's warmer standard offerings.",
+  gaKangaroo:"Known for an unusually deep, pronounced tactile bump. A favorite for people who want to really feel the actuation point.",
+  gaMagJade:"Magnetic hall effect switch. Actuation point is adjustable in software rather than fixed by a spring weight.",
+  gaNebula:"Magnetic hall effect switch with a dual-rail stem for extra stability on the downstroke.",
+  gaGoldenDragon:"A premium magnetic switch with an unusually smooth stem, actuation adjustable in software.",
+  huGeneral:"Huano is best known for the click switches inside gaming mice. Their keyboard line carries the same focus on a clean, consistent press.",
+  klBox:"Built on Kailh's box-shaped stem, which adds real dust and spill resistance on top of whatever the color's usual feel is.",
+  klBoxV2:"An updated version of the original Box design. Tighter stem tolerances for a cleaner, less wobbly press.",
+  klMidnightPro:"A newer Kailh line focused on minimal stem wobble and a clean, modern press.",
+  klSpeed:"Shorter travel and an earlier actuation point than a standard switch. Built for fast double-taps, not typing feel.",
+  klPro:"Kailh's general-purpose upgrade line, a step up in consistency from their base switches.",
+  klCanaryPolia:"Boutique tactile switches known for a light, crisp bump rather than a heavy thock.",
+  klBoutique:"A newer or more boutique Kailh release without much public documentation yet. The category below is a best guess from the name, trust your own fingers on this one."
+};
+
+const COMPANIES = {
+  keychron:"Ships stock in Keychron's own keyboards and their higher-end sister brand, Lemokey. It's first-party, so you won't find it outside that ecosystem.",
+  gateron:"One of the two biggest third-party switch makers in the hobby. Shows up across tons of brands: Akko, Glorious, Royal Kludge, NuPhy, and most custom group-buy boards.",
+  kailh:"The other major third-party switch maker. Used by 8BitDo (Matticus's own board), Keychron, Royal Kludge, Akko, Varmilo, and most hot-swap boards on the market.",
+  huano:"Mostly known for mouse click switches, but their keyboard line turns up in some budget and office-oriented boards."
+};
+
+const BRAND_OF = {ky:"keychron", ga:"gateron", hu:"huano", kl:"kailh"};
+
+const SWITCHES = [
+{id:"1-1",n:"Super Red",t:"L",w:"l",f:"kySuper"},
+{id:"1-2",n:"Super Banana",t:"L",w:"m",f:"kySuper"},
+{id:"1-3",n:"Super Brown",t:"T",w:"m",f:"kySuper"},
+{id:"1-4",n:"Silk POM Red",t:"L",w:"l",f:"kySilk"},
+{id:"1-5",n:"Silk POM Banana",t:"L",w:"m",f:"kySilk"},
+{id:"1-6",n:"Silk POM Brown",t:"T",w:"m",f:"kySilk"},
+{id:"1-7",n:"Mahjong",t:"T",w:"m",f:"kyMahjong",u:1},
+{id:"1-8",n:"K Pro Red",t:"L",w:"l",f:"kyKPro"},
+{id:"1-9",n:"K Pro Blue",t:"C",w:"m",f:"kyKPro"},
+{id:"1-10",n:"K Pro Brown",t:"T",w:"m",f:"kyKPro"},
+{id:"2-1",n:"K Pro Yellow",t:"L",w:"m",f:"kyKPro"},
+{id:"2-2",n:"K Pro Silver",t:"L",w:"l",f:"kyKPro"},
+{id:"2-3",n:"K Pro Banana",t:"L",w:"m",f:"kyKPro"},
+{id:"2-4",n:"K Pro Mint",t:"T",w:"l",f:"kyKPro"},
+{id:"2-5",n:"Silent K Pro Red",t:"L",w:"l",f:"kySilentKPro"},
+{id:"2-6",n:"Silent K Pro Brown",t:"T",w:"m",f:"kySilentKPro"},
+{id:"2-7",n:"Jupiter Red",t:"L",w:"l",f:"gaJupiter"},
+{id:"2-8",n:"Jupiter Brown",t:"T",w:"m",f:"gaJupiter"},
+{id:"2-9",n:"Jupiter Banana",t:"L",w:"m",f:"gaJupiter"},
+{id:"2-10",n:"Phantom Red",t:"L",w:"l",f:"gaPhantom"},
+{id:"3-1",n:"Phantom Blue",t:"C",w:"m",f:"gaPhantom"},
+{id:"3-2",n:"Phantom Brown",t:"T",w:"m",f:"gaPhantom"},
+{id:"3-3",n:"Phantom Yellow",t:"L",w:"m",f:"gaPhantom"},
+{id:"3-4",n:"Super Light Banana",t:"L",w:"l",f:"kySuper"},
+{id:"3-5",n:"Super Heavy Banana",t:"L",w:"h",f:"kySuper"},
+{id:"3-6",n:"Silent Banana",t:"L",w:"m",f:"kySilentKPro"},
+{id:"3-7",n:"Ultra-fast Lime",t:"M",w:"a",f:"kyLime"},
+{id:"3-8",n:"Ultra-fast Lime Banana",t:"M",w:"a",f:"kyLime"},
+{id:"3-9",n:"Ultra-fast Lime Silent Red",t:"M",w:"a",f:"kyLime"},
+{id:"3-10",n:"Ultra-fast Lime Silent Banana",t:"M",w:"a",f:"kyLime"},
+{id:"4-1",n:"Double-Rail Nebula",t:"M",w:"a",f:"gaNebula"},
+{id:"4-2",n:"Jupiter Light Banana",t:"L",w:"l",f:"gaJupiter"},
+{id:"4-3",n:"Jupiter Heavy Banana",t:"L",w:"h",f:"gaJupiter"},
+{id:"4-4",n:"Silk POM Light Banana",t:"L",w:"l",f:"kySilk"},
+{id:"4-5",n:"Silk POM Heavy Banana",t:"L",w:"h",f:"kySilk"},
+{id:"4-6",n:"Golden Dragon",t:"M",w:"a",f:"gaGoldenDragon"},
+{id:"4-7",n:"Geisha Latte",t:"L",w:"m",f:"huGeneral"},
+{id:"4-8",n:"Obsidian Pro",t:"L",w:"h",f:"huGeneral"},
+{id:"4-9",n:"G Pro 3.0 White",t:"L",w:"l",f:"gaGPro3"},
+{id:"4-10",n:"Jade Pro",t:"L",w:"m",f:"gaJade"},
+{id:"5-1",n:"Jade Gaming",t:"M",w:"a",f:"gaMagJade"},
+{id:"5-2",n:"Jade Spark",t:"M",w:"a",f:"gaMagJade"},
+{id:"5-3",n:"G Pro Yellow",t:"L",w:"m",f:"gaGPro3"},
+{id:"5-4",n:"Ink V2 Black",t:"L",w:"h",f:"gaInk"},
+{id:"5-5",n:"Box Ink V2 Black",t:"L",w:"h",f:"gaInk"},
+{id:"5-6",n:"Oil King",t:"L",w:"m",f:"gaOilKing"},
+{id:"5-7",n:"G Pro 3.0 Red",t:"L",w:"l",f:"gaGPro3"},
+{id:"5-8",n:"G Pro 3.0 Blue",t:"C",w:"m",f:"gaGPro3"},
+{id:"5-9",n:"G Pro 3.0 Brown",t:"T",w:"m",f:"gaGPro3"},
+{id:"5-10",n:"G Pro 3.0 Yellow",t:"L",w:"m",f:"gaGPro3"},
+{id:"6-1",n:"G Pro 3.0 Black",t:"L",w:"h",f:"gaGPro3"},
+{id:"6-2",n:"Box Ink V2 Pink",t:"L",w:"l",f:"gaInk"},
+{id:"6-3",n:"Smoothie",t:"L",w:"m",f:"gaSmoothie"},
+{id:"6-4",n:"Baby Kangaroo 2.0",t:"T",w:"h",f:"gaKangaroo"},
+{id:"6-5",n:"Baby Raccoon 2.0",t:"T",w:"h",f:"gaKangaroo"},
+{id:"6-6",n:"Jade Air",t:"M",w:"a",f:"gaMagJade"},
+{id:"6-7",n:"Jade Ultra",t:"M",w:"a",f:"gaMagJade"},
+{id:"6-8",n:"Jade Delta Dark",t:"M",w:"a",f:"gaMagJade"},
+{id:"6-9",n:"G Pro 3.0 Silver",t:"L",w:"l",f:"gaGPro3"},
+{id:"6-10",n:"North Pole 2.0 Yellow",t:"L",w:"m",f:"gaNorthPole"},
+{id:"7-1",n:"Box Red",t:"L",w:"l",f:"klBox"},
+{id:"7-2",n:"Box White",t:"C",w:"l",f:"klBox",yours:1},
+{id:"7-3",n:"Box Brown",t:"T",w:"m",f:"klBox"},
+{id:"7-4",n:"Box Black",t:"L",w:"h",f:"klBox"},
+{id:"7-5",n:"Box Jade",t:"C",w:"h",f:"klBox"},
+{id:"7-6",n:"Box Navy",t:"C",w:"h",f:"klBox"},
+{id:"7-7",n:"Box Cream Pro",t:"T",w:"m",f:"klBoutique",u:1},
+{id:"7-8",n:"White Owl",t:"C",w:"m",f:"klBoutique",u:1},
+{id:"7-9",n:"Red Bean Pudding",t:"T",w:"m",f:"klBoutique",u:1},
+{id:"7-10",n:"Midnight Pro Linear",t:"L",w:"m",f:"klMidnightPro"},
+{id:"8-1",n:"Midnight Pro Tactile",t:"T",w:"m",f:"klMidnightPro"},
+{id:"8-2",n:"Super Speed Silver",t:"L",w:"l",f:"klSpeed"},
+{id:"8-3",n:"Super Speed Copper",t:"L",w:"l",f:"klSpeed"},
+{id:"8-4",n:"Super Speed Bronze",t:"L",w:"m",f:"klSpeed"},
+{id:"8-5",n:"Super Speed Red",t:"L",w:"l",f:"klSpeed"},
+{id:"8-6",n:"Box V2 Red",t:"L",w:"l",f:"klBoxV2"},
+{id:"8-7",n:"Box V2 Brown",t:"T",w:"m",f:"klBoxV2"},
+{id:"8-8",n:"Box V2 White",t:"C",w:"l",f:"klBoxV2"},
+{id:"8-9",n:"Box Pale Blue",t:"C",w:"m",f:"klBox"},
+{id:"8-10",n:"Box Dark Yellow",t:"L",w:"h",f:"klBox"},
+{id:"9-1",n:"Box Burnt Orange",t:"T",w:"h",f:"klBox"},
+{id:"9-2",n:"Coco Pink Box V2",t:"L",w:"l",f:"klBoutique",u:1},
+{id:"9-3",n:"Box Summer",t:"L",w:"m",f:"klBoutique",u:1},
+{id:"9-4",n:"Polia Tactile",t:"T",w:"m",f:"klCanaryPolia"},
+{id:"9-5",n:"Canary Tactile",t:"T",w:"l",f:"klCanaryPolia"},
+{id:"9-6",n:"Speed Gold",t:"L",w:"l",f:"klSpeed"},
+{id:"9-7",n:"Speed Silver",t:"L",w:"l",f:"klSpeed"},
+{id:"9-8",n:"Speed Copper",t:"L",w:"l",f:"klSpeed"},
+{id:"9-9",n:"Speed Bronze",t:"L",w:"m",f:"klSpeed"},
+{id:"9-10",n:"Speed Pink",t:"L",w:"l",f:"klSpeed"},
+{id:"10-1",n:"Pro Burgundy",t:"T",w:"m",f:"klBoutique",u:1},
+{id:"10-2",n:"Pro Purple",t:"T",w:"m",f:"klPro"},
+{id:"10-3",n:"Pro Light Green",t:"C",w:"l",f:"klPro"},
+{id:"10-4",n:"Speed Pro Sage",t:"L",w:"l",f:"klSpeed"},
+{id:"10-5",n:"Speed Pro Plum",t:"L",w:"m",f:"klSpeed"},
+{id:"10-6",n:"Speed Pro Berry",t:"L",w:"m",f:"klSpeed"},
+{id:"10-7",n:"Speed Pro Navy",t:"L",w:"m",f:"klBoutique",u:1},
+{id:"10-8",n:"Box Whale",t:"L",w:"m",f:"klBoutique",u:1},
+{id:"10-9",n:"Box Islet",t:"L",w:"m",f:"klBoutique",u:1},
+{id:"10-10",n:"Box Winter",t:"T",w:"m",f:"klBoutique",u:1}
+];
+
+const grid = document.getElementById('grid');
+SWITCHES.forEach(s=>{
+  const color = TYPE_COLOR[s.t];
+  const el = document.createElement('div');
+  el.className = 'key' + (s.yours ? ' yours' : '');
+  el.style.setProperty('--k-color', `var(--${color})`);
+  el.tabIndex = 0;
+  el.setAttribute('role','button');
+  el.setAttribute('aria-label', s.n);
+  el.innerHTML = `<span class="pos">${s.id}</span>${s.yours ? '<span class="star">yours</span>' : ''}<span class="name">${s.n}</span>`;
+  el.addEventListener('click', ()=>openModal(s));
+  el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openModal(s); } });
+  grid.appendChild(el);
+});
+
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+let lastFocused = null;
+
+function openModal(s){
+  lastFocused = document.activeElement;
+  const color = TYPE_COLOR[s.t];
+  const brand = BRAND_OF[s.f.slice(0,2)];
+  const likers = LIKES[s.id] || [];
+  const likesHtml = likers.length
+    ? `<div class="likes">${likers.map(n=>`<span class="chip">${n}</span>`).join('')}</div>`
+    : `<div class="likes"><span class="empty">No votes yet, be the first to tell Matticus what you think.</span></div>`;
+  const uncertainNote = s.u ? `<p style="margin-top:-6px">Newer or boutique release without solid public specs. Category above is a best guess, trust your fingers over the label.</p>` : '';
+  modal.innerHTML = `
+    <button class="close" aria-label="Close">&times;</button>
+    <div class="pos-tag">${s.id}${s.yours ? ' · Matticus\'s own board' : ''}</div>
+    <h2>${s.n}</h2>
+    <div class="badges">
+      <span class="badge" style="background:var(--${color}-bg); color:var(--${color})">${TYPE_LABEL[s.t]}</span>
+      <span class="badge" style="background:var(--bg); color:var(--ink-soft); border:1px solid var(--border)">${WEIGHT_LABEL[s.w]}</span>
+    </div>
+    <p class="section-label">Feel</p>
+    <p>${DESCRIPTIONS[s.f]}</p>
+    ${uncertainNote}
+    <p class="section-label">Where it shows up</p>
+    <p>${COMPANIES[brand]}</p>
+    <p class="section-label">Liked by</p>
+    ${likesHtml}
+  `;
+  modal.querySelector('.close').addEventListener('click', closeModal);
+  overlay.classList.add('open');
+  modal.querySelector('.close').focus();
+}
+function closeModal(){
+  overlay.classList.remove('open');
+  if(lastFocused) lastFocused.focus();
+}
+overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && overlay.classList.contains('open')) closeModal(); });
+</script>
+</body>
+</html>
