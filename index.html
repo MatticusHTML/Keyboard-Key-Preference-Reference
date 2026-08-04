@@ -95,11 +95,14 @@
 
 <script>
 // ---- Friend roster (reference only - edit LIKES below to record who likes what) ----
-const FRIENDS = ["Matticus","Katelyn","Dan","Cam","Kassidy","Vanessa"];
+const FRIENDS = ["Matticus","Katelyn","Dan","Cam","Kassidy","Vanessa","Dianna","Jose","Brian","Lee"];
 
 // ---- Who likes what. Only edit this by hand (or ask Claude to). Empty = no votes yet. ----
 const LIKES = {
-  // "7-2": ["Katelyn","Dan"],
+  "1-9": ["Dianna"],
+  "3-10": ["Jose"],
+  "5-5": ["Brian"],
+  "10-3": ["Lee"],
 };
 
 const TYPE_LABEL = {L:"Linear", T:"Tactile", C:"Clicky", M:"Magnetic"};
@@ -256,7 +259,7 @@ SWITCHES.forEach(s=>{
   el.tabIndex = 0;
   el.setAttribute('role','button');
   el.setAttribute('aria-label', s.n);
-  el.innerHTML = `<span class="pos">${s.id}</span>${s.yours ? '<span class="star">yours</span>' : ''}<span class="name">${s.n}</span>`;
+  el.innerHTML = `<span class="pos">${s.id}</span>${s.yours ? '<span class="star">Matt\'s</span>' : ''}<span class="name">${s.n}</span>`;
   el.addEventListener('click', ()=>openModal(s));
   el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openModal(s); } });
   grid.appendChild(el);
@@ -277,7 +280,7 @@ function openModal(s){
   const uncertainNote = s.u ? `<p style="margin-top:-6px">Newer or boutique release without solid public specs. Category above is a best guess, trust your fingers over the label.</p>` : '';
   modal.innerHTML = `
     <button class="close" aria-label="Close">&times;</button>
-    <div class="pos-tag">${s.id}${s.yours ? ' · Matticus\'s own board' : ''}</div>
+    <div class="pos-tag">${s.id}${s.yours ? ' · Matt\'s Preference' : ''}</div>
     <h2>${s.n}</h2>
     <div class="badges">
       <span class="badge" style="background:var(--${color}-bg); color:var(--${color})">${TYPE_LABEL[s.t]}</span>
