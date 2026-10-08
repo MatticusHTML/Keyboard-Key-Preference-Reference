@@ -6,6 +6,8 @@ A single-page site replicating the Keychron Switch Tester 100 Max Edition's Supe
 
 Each popup includes visual guides for audible click, typing loudness, and tactile bump, plus a keypress illustration and Previous/Next buttons. An expandable beginner guide explains the switch types. The footer links to the original Amazon tester and the official Keychron specifications.
 
+The person filter below the beginner guide shows each person's favorite count, including only people with saved favorites. Select a name to show only their switches, or select All switches to restore the full grid. Previous/Next stays within those favorites. Matticus's marked switch is included automatically.
+
 ## Files
 
 - `index.html` - the whole site. No build step, no dependencies beyond Google Fonts. Open it directly in a browser or deploy as-is.
@@ -28,7 +30,7 @@ const LIKES = {
 };
 ```
 
-`FRIENDS` is just a reference roster. `LIKES` is what actually shows up on the site: each key is a switch id (matches the small position tag in each key, like `7-2`), and the value is an array of names who like that switch. Add a new entry or add a name to an existing array, save, redeploy.
+`FRIENDS` supplies the person filter roster. `LIKES` supplies the preferences: each key is a switch id (matches the position tag in each key, like `7-2`), and the value is an array of names who like that switch. Names in `LIKES` also appear in the filter even if missing from `FRIENDS`. Add a new entry or add a name to an existing array, save, redeploy.
 
 This is intentionally not editable from the live site itself, only by editing the source.
 
