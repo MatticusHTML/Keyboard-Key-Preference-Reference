@@ -1,5 +1,7 @@
 # Switchboard
 
+Last updated: October 8, 2026.
+
 A single-page site replicating the 100-switch tester layout as a clickable grid. Click any switch to see its type, relative weight, what it feels like, what companies use it, and who in the friend group likes it.
 
 ## Files
