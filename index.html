@@ -35,6 +35,13 @@
   .legend{display:flex; flex-wrap:wrap; gap:14px; margin:22px 0 28px; font-size:13px; color:var(--ink-soft);}
   .legend span{display:flex; align-items:center; gap:6px;}
   .legend i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+  a{color:var(--ink-soft); text-underline-offset:3px;}
+  a:hover{color:var(--ink);}
+  .type-guide{margin:0 0 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); padding:14px 16px;}
+  .type-guide summary{cursor:pointer; font-size:13px; font-weight:500;}
+  .guide-types{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:16px 0;}
+  .guide-types h3{font-size:14px; margin-bottom:4px;}
+  .guide-types p,.type-guide .guide-note{font-size:12px; color:var(--ink-soft); margin:0;}
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px;}
   .key{
     background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--k-color);
@@ -57,7 +64,7 @@
 
   .overlay{position:fixed; inset:0; background:rgba(10,10,12,.5); display:none; align-items:center; justify-content:center; padding:20px; z-index:10;}
   .overlay.open{display:flex;}
-  .modal{background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:460px; width:100%; padding:26px 26px 22px; position:relative; max-height:86vh; overflow-y:auto;}
+  .modal{background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:580px; width:100%; padding:26px 26px 22px; position:relative; max-height:86vh; max-height:86dvh; overflow-y:auto; overscroll-behavior:contain;}
   .modal .close{position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:var(--bg); color:var(--ink-soft); cursor:pointer; font-size:15px; line-height:1;}
   .modal .pos-tag{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint);}
   .modal h2{font-size:21px; margin-top:4px;}
@@ -69,29 +76,94 @@
   .likes .chip{font-size:12px; padding:4px 10px; border-radius:20px; background:var(--bg); border:1px solid var(--border); color:var(--ink);}
   .likes .empty{font-size:13px; color:var(--ink-faint); font-style:italic;}
 
+  .sensory{border:1px solid var(--border); border-radius:12px; padding:16px; background:var(--bg); margin:0 0 20px;}
+  .sensory h3{font-size:15px; margin-bottom:14px;}
+  .metric{margin-bottom:14px;}
+  .metric-heading{display:flex; justify-content:space-between; gap:10px; font-size:12px; margin-bottom:6px;}
+  .metric-heading strong{font-weight:500; color:var(--accent); text-align:right;}
+  .meter{display:flex; gap:5px; height:8px;}
+  .meter span{flex:1; border-radius:3px; background:var(--border);}
+  .meter span.filled{background:var(--accent);}
+  .meter.unknown span{background:transparent; border:1px dashed var(--ink-faint);}
+  .modal .metric-note{font-size:11px; margin:5px 0 0;}
+  .modal .estimate-note{font-size:11px; margin:12px 0 0; padding-top:12px; border-top:1px solid var(--border);}
+  .press-demo{display:flex; align-items:center; gap:18px; margin-bottom:14px;}
+  .switch-art{width:120px; height:126px; flex-shrink:0; color:var(--accent); overflow:visible;}
+  .switch-art .housing{fill:var(--surface); stroke:var(--border); stroke-width:2;}
+  .switch-art .cap{fill:var(--surface); stroke:currentColor; stroke-width:2;}
+  .switch-art .stem{fill:currentColor; opacity:.65;}
+  .switch-art .spring{fill:none; stroke:var(--ink-faint); stroke-width:2;}
+  .switch-art .feedback{opacity:0; fill:none; stroke:currentColor; stroke-width:2;}
+  .press-demo .demo-copy{flex:1; min-width:0;}
+  .modal .demo-caption{font-size:12px; margin:0 0 9px;}
+  .press-button,.switch-nav button{font:inherit; font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:7px; padding:8px 12px; cursor:pointer;}
+  button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent,var(--ink-soft)); outline-offset:3px;}
+  .press-button:hover,.switch-nav button:hover{border-color:var(--accent);}
+  .press-demo.is-pressed .moving{animation:press-smooth 1.1s ease-in-out;}
+  .press-demo.is-pressed .spring{animation:spring-press 1.1s ease-in-out; transform-origin:60px 106px;}
+  .press-demo.is-pressed[data-feel="bump"] .moving,.press-demo.is-pressed[data-feel="click"] .moving{animation-name:press-bump;}
+  .press-demo.is-pressed[data-feel="click"] .feedback{animation:click-feedback 1.1s ease;}
+  @keyframes press-smooth{0%,100%{transform:translateY(0);} 45%,60%{transform:translateY(20px);}}
+  @keyframes press-bump{0%,100%{transform:translateY(0);} 25%,37%{transform:translateY(7px);} 48%,60%{transform:translateY(20px);}}
+  @keyframes spring-press{0%,100%{transform:scaleY(1);} 45%,60%{transform:scaleY(.45);}}
+  @keyframes click-feedback{0%,35%,75%,100%{opacity:0;} 45%,60%{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){
+    .press-demo.is-pressed .moving{animation:none; transform:translateY(20px);}
+    .press-demo.is-pressed .spring{animation:none; transform:scaleY(.45);}
+    .press-demo.is-pressed[data-feel="click"] .feedback{animation:none; opacity:1;}
+  }
+  .switch-nav{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-bottom:14px; margin-bottom:16px; border-bottom:1px solid var(--border);}
+  .switch-nav span{font-size:11px; color:var(--ink-faint);}
+  .modal .source-note{font-size:11px; margin:16px 0 0;}
+  @media (max-width:420px){
+    .wrap{padding:30px 16px 50px;}
+    .overlay{padding:12px;}
+    .modal{padding:24px 18px 18px; max-height:92dvh;}
+    .sensory{padding:12px;}
+    .press-demo{gap:10px;}
+    .switch-art{width:96px; height:110px;}
+    .guide-types{grid-template-columns:1fr;}
+  }
+
   footer{margin-top:40px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--ink-faint);}
+  footer p{margin:0 0 8px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Switchboard</h1>
-    <p>All 100 switches from the tester, sorted the way it actually feels. Click any key to see what it's made of, who uses it, and who around here likes it.</p>
+    <p>All 100 switches from our tester, in the same positions as the real thing. Pick a key to explore its feel, expected sound, and who around here likes it.</p>
     <div class="legend">
       <span><i style="background:var(--linear)"></i>Linear - smooth, no bump</span>
-      <span><i style="background:var(--tactile)"></i>Tactile - bump before click</span>
+      <span><i style="background:var(--tactile)"></i>Tactile - bump without an added click</span>
       <span><i style="background:var(--clicky)"></i>Clicky - bump plus audible click</span>
       <span><i style="background:var(--magnetic)"></i>Magnetic - hall effect, tuned in software</span>
     </div>
   </header>
 
+  <details class="type-guide">
+    <summary>New to switches? A quick guide to feel and sound</summary>
+    <div class="guide-types">
+      <div><h3 style="color:var(--linear)">Linear</h3><p>A smooth press with no tactile bump or added click. You can still hear the key hitting the bottom and returning to the top.</p></div>
+      <div><h3 style="color:var(--tactile)">Tactile</h3><p>A bump you feel as you press. That bump does not need a click sound, and a tactile switch can be quiet or quite clacky.</p></div>
+      <div><h3 style="color:var(--clicky)">Clicky</h3><p>A tactile event plus a deliberate audible click. Usually the most noticeable option to people nearby.</p></div>
+      <div><h3 style="color:var(--magnetic)">Magnetic</h3><p>A sensing method, with either linear or tactile feel. A compatible keyboard can adjust where the press registers; software does not change the spring's physical weight.</p></div>
+    </div>
+    <p class="guide-note"><strong>Silent</strong> switches use damping to soften impact noise. <strong>Thock</strong> means a deeper sound; <strong>clack</strong> means a sharper sound. Neither tells you the volume. Our sound levels are broad expectations, not recordings or decibel measurements.</p>
+  </details>
+
   <div class="grid" id="grid"></div>
 
-  <footer>Curated by Matticus. Want to add a name to a switch, or a new tester to the roster? Just ask Claude to update this file.</footer>
+  <footer>
+    <p>Curated by Matticus. Want to add a name to a switch? Ask Matticus to update the preferences.</p>
+    <p>Based on our <a href="https://www.amazon.com/dp/B0GVLX94W5" target="_blank" rel="noopener noreferrer">Keychron Switch Tester 100 Max Edition on Amazon</a> (Super switch layout). <a href="https://www.keychron.com/products/keychron-switch-tester-100-max-edition" target="_blank" rel="noopener noreferrer">Official tester details and specifications</a>.</p>
+    <p>Sound changes with the keycaps, case, plate, desk, and how hard you type. Try the physical tester for the best comparison.</p>
+  </footer>
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="modal" id="modal"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="switch-title"></div>
 </div>
 
 <script>
@@ -110,36 +182,42 @@ const LIKES = {
 };
 
 const TYPE_LABEL = {L:"Linear", T:"Tactile", C:"Clicky", M:"Magnetic"};
-const WEIGHT_LABEL = {l:"Light", m:"Medium", h:"Heavy", a:"Adjustable"};
+const WEIGHT_LABEL = {l:"Light spring (approx.)", m:"Medium spring (approx.)", h:"Heavy spring (approx.)", a:"Adjustable actuation"};
 const TYPE_COLOR = {L:"linear", T:"tactile", C:"clicky", M:"magnetic"};
 
 const DESCRIPTIONS = {
-  kySuper:"Keychron's entry-level in-house switch. Straightforward and consistent, not much personality beyond that.",
-  kySilk:"Uses a smoother POM plastic housing for a quieter, slightly muted sound versus Keychron's standard line.",
-  kyKPro:"The switch that ships stock in most Keychron boards. A dependable baseline most people never think to swap.",
+  kySuper:"Keychron's standard mechanical switch family. Red is smooth, Brown has a bump, and Banana has an earlier tactile bump.",
+  kySilk:"POM housing and stem with factory lubrication for a smooth stroke. Brown and Banana add a tactile bump; Red stays linear. A deeper tone does not automatically mean a lower volume.",
+  kyKPro:"A mechanical switch family with several different feels. Blue adds a click, Brown has a bump, and Banana and Mint put their tactile bump earlier in the press.",
   kySilentKPro:"Same core feel as K Pro, with dampening built in so the bottom-out lands softer and quieter.",
-  kyMahjong:"A novelty switch with an unusually deep, hollow bottom-out sound. More collector's piece than daily driver.",
-  kyLime:"Magnetic hall effect switch. Actuation point is set in software, not fixed by the spring, so it can feel lighter or heavier depending on configuration.",
+  kyMahjong:"The exact specifications for this tester's Mahjong switch have not been confirmed. Try the physical key to judge its bump and sound.",
+  kyLime:"Magnetic sensing with linear Lime/Red and tactile Banana options, including damped silent versions. A compatible keyboard adjusts the registration point in software; the physical spring and bump stay the same.",
   gaJupiter:"Gateron's mid-tier line, factory lubed for a noticeably smoother stroke than typical budget switches.",
   gaPhantom:"A budget-friendly Gateron line built for consistency over character.",
-  gaGPro3:"Gateron's current flagship line, and the switch most enthusiast pre-builts ship with. Smooth out of the bag.",
+  gaGPro3:"Gateron's general-purpose mechanical family. The color identifies the feel: Blue clicks, Brown has a bump, and the other variants here have a smooth linear press.",
   gaJade:"Factory lubed for a glassy, low-friction downstroke with minimal scratch.",
   gaInk:"Gateron's premium line. A denser plastic blend gives it a deeper, more muted sound than standard switches.",
-  gaOilKing:"One of the most talked-about linear switches in the hobby right now. Silky and pre-lubed from the factory.",
+  gaOilKing:"A factory-lubricated linear switch. Expect a smooth press without a tactile bump or an added click; impact noise remains audible.",
   gaSmoothie:"Tuned specifically around a buttery, low-friction feel. Does what the name promises.",
   gaNorthPole:"A cooler, crisper feeling linear line compared to Gateron's warmer standard offerings.",
   gaKangaroo:"Known for an unusually deep, pronounced tactile bump. A favorite for people who want to really feel the actuation point.",
-  gaMagJade:"Magnetic hall effect switch. Actuation point is adjustable in software rather than fixed by a spring weight.",
+  gaRaccoon:"A linear switch with a longer stem and shorter total travel than a conventional full-travel switch. It reaches bottom-out sooner without adding a tactile bump.",
+  gaMagJade:"A magnetic switch for compatible magnetic keyboards. Software adjusts where the key registers, while the physical spring still supplies the resistance. Magnetic does not mean silent.",
   gaNebula:"Magnetic hall effect switch with a dual-rail stem for extra stability on the downstroke.",
   gaGoldenDragon:"A premium magnetic switch with an unusually smooth stem, actuation adjustable in software.",
   huGeneral:"Huano is best known for the click switches inside gaming mice. Their keyboard line carries the same focus on a clean, consistent press.",
   klBox:"Built on Kailh's box-shaped stem, which adds real dust and spill resistance on top of whatever the color's usual feel is.",
   klBoxV2:"An updated version of the original Box design. Tighter stem tolerances for a cleaner, less wobbly press.",
-  klMidnightPro:"A newer Kailh line focused on minimal stem wobble and a clean, modern press.",
-  klSpeed:"Shorter travel and an earlier actuation point than a standard switch. Built for fast double-taps, not typing feel.",
+  klMidnightPro:"A damped silent family with linear and tactile options. Internal muffler pads soften impact noise on the press and return.",
+  klSpeed:"An early registration point and short travel make a light touch enough to trigger a press. Silver is linear, Copper is tactile, and Gold, Bronze, and Pink are clicky.",
+  klSuperSpeed:"A fast mechanical family with different feels: Red and Silver are linear, Copper is tactile, and Bronze adds an audible click.",
+  klSpeedPro:"The heavier Pro family. Berry is linear, Plum is tactile, and Sage and Navy are clicky. The heavier spring adds resistance, not a volume control.",
   klPro:"Kailh's general-purpose upgrade line, a step up in consistency from their base switches.",
   klCanaryPolia:"Boutique tactile switches known for a light, crisp bump rather than a heavy thock.",
-  klBoutique:"A newer or more boutique Kailh release without much public documentation yet. The category below is a best guess from the name, trust your own fingers on this one."
+  klCream:"A POM-based linear Box switch. Its smooth press has no tactile bump or deliberate click, but you can still hear impact noise.",
+  klDeepSea:"A silent Box family with damping on the press and return. Whale is tactile; Islet is linear. Both soften impact noise without removing the physical spring resistance.",
+  klBoxSpecial:"A Kailh Box variant. Its individual mechanism determines the feel and sound; the Box name alone does not mean clicky or silent.",
+  klBoutique:"The exact specifications for this tester's variant have not been confirmed. Use the physical key to judge its feel and sound."
 };
 
 const COMPANIES = {
@@ -151,12 +229,103 @@ const COMPANIES = {
 
 const BRAND_OF = {ky:"keychron", ga:"gateron", hu:"huano", kl:"kailh"};
 
+// Sound/bump levels below are qualitative guides, not acoustic or force measurements.
+// Manufacturer pages support mechanisms and silent designs; within-category levels are estimates.
+const TESTER_SOURCE = "https://www.keychron.com/products/keychron-switch-tester-100-max-edition";
+const PROFILE_SOURCES = {
+  kySuper:"https://www.keychron.com/products/keychron-super-switch",
+  kySilk:"https://www.keychron.com/products/keychron-silk-pom-switch",
+  kyKPro:"https://www.keychron.com/products/keychron-k-pro-switch",
+  kySilentKPro:"https://www.keychron.com/products/keychron-silent-k-pro-switch",
+  kyLime:"https://www.keychron.com/products/keychron-ultra-fast-lime-magnetic-switch",
+  gaJupiter:"https://www.keychron.com/products/keychron-q3-max-qmk-via-wireless-custom-mechanical-keyboard",
+  gaRaccoon:"https://www.keychron.com/products/gateron-switch-tester-version-2",
+  klBox:"https://www.kailh.net/blogs/news/kailh-box-switches-buying-guide",
+  klBoxV2:"https://www.kailh.net/blogs/news/kailh-box-switches-buying-guide",
+  klMidnightPro:"https://www.kailh.net/products/kailh-midnight-pro-silent-switch-set",
+  klSpeed:"https://www.kailh.net/products/kailh-speed-switch-set",
+  klSuperSpeed:"https://www.kailh.net/products/kailh-super-speed-switch-set",
+  klSpeedPro:"https://www.kailh.net/products/kailh-speed-pro-heavy-switch-set",
+  klPro:"https://www.kailh.net/products/kailh-pro-switch-set",
+  klCream:"https://www.kailh.net/products/kailh-box-cream-pro-switch-set",
+  klDeepSea:"https://www.kailh.net/collections/best-sellers/products/kailh-deep-sea-silent-pro-box-switch-set",
+  klBoxSpecial:"https://www.kailh.net/blogs/news/kailh-box-switches-buying-guide"
+};
+const SWITCH_SOURCES = {
+  "3-6":"https://www.keychron.com/products/keychron-silent-switch",
+  "7-8":"https://www.kailh.net/products/kailh-white-owl-switch-set",
+  "9-3":"https://www.kailh.net/products/kailh-box-summer-clicky-switch-set",
+  "10-10":"https://www.kailh.net/products/kailh-box-winter-tactile-switch-set"
+};
+
+function getProfile(s){
+  const feel = s.feel || (s.t === 'M' ? 'L' : s.t);
+  const silent = /Silent/.test(s.n) || s.f === 'kySilentKPro' || s.f === 'klMidnightPro' || s.f === 'klDeepSea';
+  const thickClick = s.n === 'Box Jade' || s.n === 'Box Navy';
+  const strongBump = feel === 'T' && (/Banana|Mint/.test(s.n) || s.f === 'gaKangaroo');
+  const click = s.u ? null : feel === 'C' ? (thickClick ? 3 : 2) : 0;
+  const bump = s.u ? null : feel === 'L' ? 0 : strongBump || thickClick ? 3 : 2;
+  const noise = s.u ? null : silent ? 1 : feel === 'C' ? (thickClick ? 4 : 3) : 2;
+  const clickNote = s.u ? 'The exact click mechanism is not confirmed.' : click
+    ? 'A deliberate click is part of the switch mechanism, separate from impact noise.'
+    : 'No deliberate click mechanism. The key can still make noise when it hits the ends of its travel.';
+  const bumpNote = s.u ? 'Try the tester to check whether there is a bump.' : bump
+    ? strongBump ? 'An early, pronounced bump in resistance as you press.' : 'You feel resistance rise and release during the press.'
+    : 'A smooth stroke with no tactile bump. Spring resistance still rises as you press.';
+  const noiseNote = s.u ? 'No sound level assigned until this exact variant is confirmed.' : silent
+    ? 'Damping softens bottom-out and return noise. Quiet does not mean completely silent.'
+    : thickClick ? 'The thicker click bar gives a pronounced click on the press and return.'
+    : feel === 'C' ? 'An audible click plus bottom-out and return noise. Likely to stand out nearby.'
+    : 'Expect bottom-out and return sounds. A linear or tactile switch is not automatically silent.';
+  return {
+    feel, silent, click, bump, noise, clickNote, bumpNote, noiseNote,
+    clickLabel:click === null ? 'Unconfirmed' : ['No added click','','Crisp click','Strong click'][click],
+    bumpLabel:bump === null ? 'Unconfirmed' : ['Smooth','','Noticeable bump','Pronounced bump'][bump],
+    noiseLabel:noise === null ? 'Unconfirmed' : ['','Soft / damped','Moderate','Loud','Very loud'][noise],
+    demoFeel:s.u ? 'unknown' : feel === 'C' ? 'click' : feel === 'T' ? 'bump' : 'smooth',
+    demoCaption:s.u ? 'Press feel unconfirmed. The illustration shows only a generic press.' : feel === 'C'
+      ? 'Feel a bump and hear a click. Some click mechanisms also click on the return.'
+      : feel === 'T' ? 'Feel a bump, then the resistance releases. No added click is needed.'
+      : 'A continuous press with no bump or added click.',
+    source:SWITCH_SOURCES[s.id] || (thickClick ? 'https://www.kailh.net/products/kailh-box-thick-clicky-switch-set' : PROFILE_SOURCES[s.f] || TESTER_SOURCE)
+  };
+}
+
+function renderMetric(label, value, max, description, note){
+  const segments = Array.from({length:max},(_,i)=>`<span class="${value !== null && i < value ? 'filled' : ''}"></span>`).join('');
+  return `<div class="metric">
+    <div class="metric-heading"><span>${label}</span><strong>${description}</strong></div>
+    <div class="meter${value === null ? ' unknown' : ''}" aria-hidden="true">${segments}</div>
+    <p class="metric-note">${note}</p>
+  </div>`;
+}
+
+function renderSensory(s, profile){
+  return `<section class="sensory" aria-labelledby="sensory-title">
+    <h3 id="sensory-title">Feel & sound at a glance</h3>
+    <div class="press-demo" data-feel="${profile.demoFeel}">
+      <svg class="switch-art" viewBox="0 0 120 126" aria-hidden="true">
+        <rect class="housing" x="22" y="51" width="76" height="63" rx="10"/>
+        <path class="spring" d="M45 81 L75 86 L45 91 L75 96 L45 101 L75 106"/>
+        <g class="moving"><rect class="stem" x="51" y="33" width="18" height="44" rx="3"/><rect class="cap" x="13" y="13" width="94" height="28" rx="7"/><path d="M25 21 H95" stroke="currentColor" opacity=".3"/></g>
+        <path class="feedback" d="M103 66 L114 60 M105 76 H119 M103 86 L114 92"/>
+        <path d="M32 117 H88" stroke="currentColor" stroke-width="3" opacity=".4"/>
+      </svg>
+      <div class="demo-copy"><p class="demo-caption">${profile.demoCaption}</p><button class="press-button" type="button">Show a keypress</button></div>
+    </div>
+    ${renderMetric('Audible click',profile.click,3,profile.clickLabel,profile.clickNote)}
+    ${renderMetric('Typing loudness',profile.noise,4,profile.noiseLabel,profile.noiseNote)}
+    ${renderMetric('Tactile bump',profile.bump,3,profile.bumpLabel,profile.bumpNote)}
+    <p class="estimate-note">${s.u ? 'Dashed bars mean this variant is unconfirmed.' : 'Broad expectations based on switch design, not measured ratings.'} The animation illustrates feel; it is not a recording or a measured force curve. Keycaps, the keyboard case, and typing force change the actual sound.</p>
+  </section>`;
+}
+
 const SWITCHES = [
 {id:"1-1",n:"Super Red",t:"L",w:"l",f:"kySuper"},
-{id:"1-2",n:"Super Banana",t:"L",w:"m",f:"kySuper"},
+{id:"1-2",n:"Super Banana",t:"T",w:"m",f:"kySuper"},
 {id:"1-3",n:"Super Brown",t:"T",w:"m",f:"kySuper"},
 {id:"1-4",n:"Silk POM Red",t:"L",w:"l",f:"kySilk"},
-{id:"1-5",n:"Silk POM Banana",t:"L",w:"m",f:"kySilk"},
+{id:"1-5",n:"Silk POM Banana",t:"T",w:"m",f:"kySilk"},
 {id:"1-6",n:"Silk POM Brown",t:"T",w:"m",f:"kySilk"},
 {id:"1-7",n:"Mahjong",t:"T",w:"m",f:"kyMahjong",u:1},
 {id:"1-8",n:"K Pro Red",t:"L",w:"l",f:"kyKPro"},
@@ -164,29 +333,29 @@ const SWITCHES = [
 {id:"1-10",n:"K Pro Brown",t:"T",w:"m",f:"kyKPro"},
 {id:"2-1",n:"K Pro Yellow",t:"L",w:"m",f:"kyKPro"},
 {id:"2-2",n:"K Pro Silver",t:"L",w:"l",f:"kyKPro"},
-{id:"2-3",n:"K Pro Banana",t:"L",w:"m",f:"kyKPro"},
-{id:"2-4",n:"K Pro Mint",t:"T",w:"l",f:"kyKPro"},
+{id:"2-3",n:"K Pro Banana",t:"T",w:"m",f:"kyKPro"},
+{id:"2-4",n:"K Pro Mint",t:"T",w:"h",f:"kyKPro"},
 {id:"2-5",n:"Silent K Pro Red",t:"L",w:"l",f:"kySilentKPro"},
 {id:"2-6",n:"Silent K Pro Brown",t:"T",w:"m",f:"kySilentKPro"},
 {id:"2-7",n:"Jupiter Red",t:"L",w:"l",f:"gaJupiter"},
 {id:"2-8",n:"Jupiter Brown",t:"T",w:"m",f:"gaJupiter"},
-{id:"2-9",n:"Jupiter Banana",t:"L",w:"m",f:"gaJupiter"},
+{id:"2-9",n:"Jupiter Banana",t:"T",w:"m",f:"gaJupiter"},
 {id:"2-10",n:"Phantom Red",t:"L",w:"l",f:"gaPhantom"},
 {id:"3-1",n:"Phantom Blue",t:"C",w:"m",f:"gaPhantom"},
 {id:"3-2",n:"Phantom Brown",t:"T",w:"m",f:"gaPhantom"},
 {id:"3-3",n:"Phantom Yellow",t:"L",w:"m",f:"gaPhantom"},
-{id:"3-4",n:"Super Light Banana",t:"L",w:"l",f:"kySuper"},
-{id:"3-5",n:"Super Heavy Banana",t:"L",w:"h",f:"kySuper"},
-{id:"3-6",n:"Silent Banana",t:"L",w:"m",f:"kySilentKPro"},
+{id:"3-4",n:"Super Light Banana",t:"T",w:"l",f:"kySuper"},
+{id:"3-5",n:"Super Heavy Banana",t:"T",w:"h",f:"kySuper"},
+{id:"3-6",n:"Silent Banana",t:"T",w:"m",f:"kySilentKPro"},
 {id:"3-7",n:"Ultra-fast Lime",t:"M",w:"a",f:"kyLime"},
-{id:"3-8",n:"Ultra-fast Lime Banana",t:"M",w:"a",f:"kyLime"},
+{id:"3-8",n:"Ultra-fast Lime Banana",t:"M",w:"a",f:"kyLime",feel:"T"},
 {id:"3-9",n:"Ultra-fast Lime Silent Red",t:"M",w:"a",f:"kyLime"},
-{id:"3-10",n:"Ultra-fast Lime Silent Banana",t:"M",w:"a",f:"kyLime"},
+{id:"3-10",n:"Ultra-fast Lime Silent Banana",t:"M",w:"a",f:"kyLime",feel:"T"},
 {id:"4-1",n:"Double-Rail Nebula",t:"M",w:"a",f:"gaNebula"},
-{id:"4-2",n:"Jupiter Light Banana",t:"L",w:"l",f:"gaJupiter"},
-{id:"4-3",n:"Jupiter Heavy Banana",t:"L",w:"h",f:"gaJupiter"},
-{id:"4-4",n:"Silk POM Light Banana",t:"L",w:"l",f:"kySilk"},
-{id:"4-5",n:"Silk POM Heavy Banana",t:"L",w:"h",f:"kySilk"},
+{id:"4-2",n:"Jupiter Light Banana",t:"T",w:"l",f:"gaJupiter"},
+{id:"4-3",n:"Jupiter Heavy Banana",t:"T",w:"h",f:"gaJupiter"},
+{id:"4-4",n:"Silk POM Light Banana",t:"T",w:"l",f:"kySilk"},
+{id:"4-5",n:"Silk POM Heavy Banana",t:"T",w:"h",f:"kySilk"},
 {id:"4-6",n:"Golden Dragon",t:"M",w:"a",f:"gaGoldenDragon"},
 {id:"4-7",n:"Geisha Latte",t:"L",w:"m",f:"huGeneral"},
 {id:"4-8",n:"Obsidian Pro",t:"L",w:"h",f:"huGeneral"},
@@ -206,7 +375,7 @@ const SWITCHES = [
 {id:"6-2",n:"Box Ink V2 Pink",t:"L",w:"l",f:"gaInk"},
 {id:"6-3",n:"Smoothie",t:"L",w:"m",f:"gaSmoothie"},
 {id:"6-4",n:"Baby Kangaroo 2.0",t:"T",w:"h",f:"gaKangaroo"},
-{id:"6-5",n:"Baby Raccoon 2.0",t:"T",w:"h",f:"gaKangaroo"},
+{id:"6-5",n:"Baby Raccoon 2.0",t:"L",w:"m",f:"gaRaccoon"},
 {id:"6-6",n:"Jade Air",t:"M",w:"a",f:"gaMagJade"},
 {id:"6-7",n:"Jade Ultra",t:"M",w:"a",f:"gaMagJade"},
 {id:"6-8",n:"Jade Delta Dark",t:"M",w:"a",f:"gaMagJade"},
@@ -218,40 +387,40 @@ const SWITCHES = [
 {id:"7-4",n:"Box Black",t:"L",w:"h",f:"klBox"},
 {id:"7-5",n:"Box Jade",t:"C",w:"h",f:"klBox"},
 {id:"7-6",n:"Box Navy",t:"C",w:"h",f:"klBox"},
-{id:"7-7",n:"Box Cream Pro",t:"T",w:"m",f:"klBoutique",u:1},
-{id:"7-8",n:"White Owl",t:"C",w:"m",f:"klBoutique",u:1},
-{id:"7-9",n:"Red Bean Pudding",t:"T",w:"m",f:"klBoutique",u:1},
+{id:"7-7",n:"Box Cream Pro",t:"L",w:"l",f:"klCream"},
+{id:"7-8",n:"White Owl",t:"C",w:"m",f:"klBoxSpecial"},
+{id:"7-9",n:"Red Bean Pudding",t:"L",w:"l",f:"klBoxSpecial"},
 {id:"7-10",n:"Midnight Pro Linear",t:"L",w:"m",f:"klMidnightPro"},
 {id:"8-1",n:"Midnight Pro Tactile",t:"T",w:"m",f:"klMidnightPro"},
-{id:"8-2",n:"Super Speed Silver",t:"L",w:"l",f:"klSpeed"},
-{id:"8-3",n:"Super Speed Copper",t:"L",w:"l",f:"klSpeed"},
-{id:"8-4",n:"Super Speed Bronze",t:"L",w:"m",f:"klSpeed"},
-{id:"8-5",n:"Super Speed Red",t:"L",w:"l",f:"klSpeed"},
+{id:"8-2",n:"Super Speed Silver",t:"L",w:"l",f:"klSuperSpeed"},
+{id:"8-3",n:"Super Speed Copper",t:"T",w:"l",f:"klSuperSpeed"},
+{id:"8-4",n:"Super Speed Bronze",t:"C",w:"m",f:"klSuperSpeed"},
+{id:"8-5",n:"Super Speed Red",t:"L",w:"l",f:"klSuperSpeed"},
 {id:"8-6",n:"Box V2 Red",t:"L",w:"l",f:"klBoxV2"},
 {id:"8-7",n:"Box V2 Brown",t:"T",w:"m",f:"klBoxV2"},
 {id:"8-8",n:"Box V2 White",t:"C",w:"l",f:"klBoxV2"},
 {id:"8-9",n:"Box Pale Blue",t:"C",w:"m",f:"klBox"},
 {id:"8-10",n:"Box Dark Yellow",t:"L",w:"h",f:"klBox"},
 {id:"9-1",n:"Box Burnt Orange",t:"T",w:"h",f:"klBox"},
-{id:"9-2",n:"Coco Pink Box V2",t:"L",w:"l",f:"klBoutique",u:1},
-{id:"9-3",n:"Box Summer",t:"L",w:"m",f:"klBoutique",u:1},
+{id:"9-2",n:"Coco Pink Box V2",t:"L",w:"l",f:"klBoxSpecial"},
+{id:"9-3",n:"Box Summer",t:"C",w:"m",f:"klBoxSpecial"},
 {id:"9-4",n:"Polia Tactile",t:"T",w:"m",f:"klCanaryPolia"},
 {id:"9-5",n:"Canary Tactile",t:"T",w:"l",f:"klCanaryPolia"},
-{id:"9-6",n:"Speed Gold",t:"L",w:"l",f:"klSpeed"},
+{id:"9-6",n:"Speed Gold",t:"C",w:"m",f:"klSpeed"},
 {id:"9-7",n:"Speed Silver",t:"L",w:"l",f:"klSpeed"},
-{id:"9-8",n:"Speed Copper",t:"L",w:"l",f:"klSpeed"},
-{id:"9-9",n:"Speed Bronze",t:"L",w:"m",f:"klSpeed"},
-{id:"9-10",n:"Speed Pink",t:"L",w:"l",f:"klSpeed"},
-{id:"10-1",n:"Pro Burgundy",t:"T",w:"m",f:"klBoutique",u:1},
+{id:"9-8",n:"Speed Copper",t:"T",w:"l",f:"klSpeed"},
+{id:"9-9",n:"Speed Bronze",t:"C",w:"m",f:"klSpeed"},
+{id:"9-10",n:"Speed Pink",t:"C",w:"m",f:"klSpeed"},
+{id:"10-1",n:"Pro Burgundy",t:"L",w:"m",f:"klPro"},
 {id:"10-2",n:"Pro Purple",t:"T",w:"m",f:"klPro"},
 {id:"10-3",n:"Pro Light Green",t:"C",w:"l",f:"klPro"},
-{id:"10-4",n:"Speed Pro Sage",t:"L",w:"l",f:"klSpeed"},
-{id:"10-5",n:"Speed Pro Plum",t:"L",w:"m",f:"klSpeed"},
-{id:"10-6",n:"Speed Pro Berry",t:"L",w:"m",f:"klSpeed"},
-{id:"10-7",n:"Speed Pro Navy",t:"L",w:"m",f:"klBoutique",u:1},
-{id:"10-8",n:"Box Whale",t:"L",w:"m",f:"klBoutique",u:1},
-{id:"10-9",n:"Box Islet",t:"L",w:"m",f:"klBoutique",u:1},
-{id:"10-10",n:"Box Winter",t:"T",w:"m",f:"klBoutique",u:1}
+{id:"10-4",n:"Speed Pro Sage",t:"C",w:"h",f:"klSpeedPro"},
+{id:"10-5",n:"Speed Pro Plum",t:"T",w:"h",f:"klSpeedPro"},
+{id:"10-6",n:"Speed Pro Berry",t:"L",w:"h",f:"klSpeedPro"},
+{id:"10-7",n:"Speed Pro Navy",t:"C",w:"h",f:"klSpeedPro"},
+{id:"10-8",n:"Box Whale",t:"T",w:"m",f:"klDeepSea"},
+{id:"10-9",n:"Box Islet",t:"L",w:"l",f:"klDeepSea"},
+{id:"10-10",n:"Box Winter",t:"T",w:"l",f:"klBoxSpecial"}
 ];
 
 const grid = document.getElementById('grid');
@@ -279,42 +448,91 @@ SWITCHES.forEach(s=>{
 const overlay = document.getElementById('overlay');
 const modal = document.getElementById('modal');
 let lastFocused = null;
+let selectedIndex = 0;
+let demoTimer = null;
+let previousOverflow = '';
 
 function openModal(s){
-  lastFocused = document.activeElement;
+  const alreadyOpen = overlay.classList.contains('open');
+  const navigationStep = alreadyOpen ? document.activeElement?.dataset.step : null;
+  if(!alreadyOpen){
+    lastFocused = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+  }
+  clearTimeout(demoTimer);
+  selectedIndex = SWITCHES.indexOf(s);
   const color = TYPE_COLOR[s.t];
+  const profile = getProfile(s);
   const brand = BRAND_OF[s.f.slice(0,2)];
   const likers = LIKES[s.id] || [];
   const likesHtml = likers.length
     ? `<div class="likes">${likers.map(n=>`<span class="chip">${n}</span>`).join('')}</div>`
     : `<div class="likes"><span class="empty">No votes yet, be the first to tell Matticus what you think.</span></div>`;
-  const uncertainNote = s.u ? `<p style="margin-top:-6px">Newer or boutique release without solid public specs. Category above is a best guess, trust your fingers over the label.</p>` : '';
+  const uncertainNote = s.u ? `<p>This variant's type and weight are provisional. Its sound and bump bars are left unconfirmed so you can judge it on the tester.</p>` : '';
+  const resistanceNote = s.t === 'M'
+    ? 'Software on a compatible magnetic keyboard changes the depth where a press registers, not the physical spring weight. This tester has no electronics, so it only demonstrates feel and sound.'
+    : s.w === 'l' ? 'A lighter spring takes less effort to press. Resting fingers can trigger light or early-actuating switches more easily.'
+    : s.w === 'h' ? 'A heavier spring asks for a firmer press. It can feel more deliberate, but may tire your fingers during long typing sessions.'
+    : 'A moderate spring gives some resistance without requiring the firmest press. The tactile bump, if present, also changes the effort you feel.';
+  modal.style.setProperty('--accent', `var(--${color})`);
   modal.innerHTML = `
-    <button class="close" aria-label="Close">&times;</button>
+    <button class="close" type="button" aria-label="Close switch details">&times;</button>
     <div class="pos-tag">${s.id}${s.yours ? ' · Matt\'s Preference' : ''}</div>
-    <h2>${s.n}</h2>
+    <h2 id="switch-title">${s.n}</h2>
     <div class="badges">
-      <span class="badge" style="background:var(--${color}-bg); color:var(--${color})">${TYPE_LABEL[s.t]}</span>
+      <span class="badge" style="background:var(--${color}-bg); color:var(--${color})">${TYPE_LABEL[s.t]}${s.u ? ' (unconfirmed)' : ''}</span>
+      ${s.t === 'M' ? `<span class="badge" style="background:var(--bg); border:1px solid var(--border)">${TYPE_LABEL[profile.feel]} feel</span>` : ''}
       <span class="badge" style="background:var(--bg); color:var(--ink-soft); border:1px solid var(--border)">${WEIGHT_LABEL[s.w]}</span>
+      ${profile.silent && !s.u ? '<span class="badge" style="background:var(--bg); border:1px solid var(--border)">Silent design</span>' : ''}
     </div>
+    <nav class="switch-nav" aria-label="Browse switches"><button type="button" data-step="-1">Previous</button><span>${selectedIndex + 1} of ${SWITCHES.length}</span><button type="button" data-step="1">Next</button></nav>
+    ${renderSensory(s,profile)}
     <p class="section-label">Feel</p>
     <p>${DESCRIPTIONS[s.f]}</p>
     ${uncertainNote}
+    <p class="section-label">Press resistance</p>
+    <p>${s.u ? 'The spring weight for this variant has not been confirmed.' : resistanceNote}</p>
     <p class="section-label">Where it shows up</p>
     <p>${COMPANIES[brand]}</p>
     <p class="section-label">Liked by</p>
     ${likesHtml}
+    <p class="source-note"><a href="${profile.source}" target="_blank" rel="noopener noreferrer">${profile.source === TESTER_SOURCE ? 'Official tester reference' : 'Manufacturer reference for this family'}</a>. Sound and bump levels are our qualitative guide.</p>
   `;
   modal.querySelector('.close').addEventListener('click', closeModal);
+  modal.querySelector('.press-button').addEventListener('click', ()=>{
+    const demo = modal.querySelector('.press-demo');
+    if(demo.classList.contains('is-pressed')) return;
+    demo.classList.add('is-pressed');
+    demoTimer = setTimeout(()=>demo.classList.remove('is-pressed'),1100);
+  });
+  modal.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click', ()=>{
+    openModal(SWITCHES[(selectedIndex + Number(button.dataset.step) + SWITCHES.length) % SWITCHES.length]);
+  }));
   overlay.classList.add('open');
-  modal.querySelector('.close').focus();
+  document.querySelector('.wrap').inert = true;
+  document.body.style.overflow = 'hidden';
+  modal.scrollTop = 0;
+  (navigationStep ? modal.querySelector(`[data-step="${navigationStep}"]`) : modal.querySelector('.close')).focus({preventScroll:true});
 }
 function closeModal(){
+  clearTimeout(demoTimer);
   overlay.classList.remove('open');
+  document.querySelector('.wrap').inert = false;
+  document.body.style.overflow = previousOverflow;
   if(lastFocused) lastFocused.focus();
 }
 overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape' && overlay.classList.contains('open')) closeModal(); });
+document.addEventListener('keydown', e=>{
+  if(!overlay.classList.contains('open')) return;
+  if(e.key === 'Escape') closeModal();
+  if(e.key === 'Tab'){
+    const focusable = modal.querySelectorAll('button,a[href]');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if(e.shiftKey && document.activeElement === first){e.preventDefault(); last.focus();}
+    else if(!e.shiftKey && document.activeElement === last){e.preventDefault(); first.focus();}
+  }
+});
 </script>
 </body>
 </html>

@@ -2,7 +2,9 @@
 
 Last updated: October 8, 2026.
 
-A single-page site replicating the 100-switch tester layout as a clickable grid. Click any switch to see its type, relative weight, what it feels like, what companies use it, and who in the friend group likes it.
+A single-page site replicating the Keychron Switch Tester 100 Max Edition's Super switch layout as a clickable grid. Coworker preferences appear on the grid. Click any switch to explore its feel, expected sound, spring resistance, and preferences.
+
+Each popup includes visual guides for audible click, typing loudness, and tactile bump, plus a keypress illustration and Previous/Next buttons. An expandable beginner guide explains the switch types. The footer links to the original Amazon tester and the official Keychron specifications.
 
 ## Files
 
@@ -39,11 +41,16 @@ Each entry in the `SWITCHES` array looks like:
 ```
 
 - `t` - type: `L` linear, `T` tactile, `C` clicky, `M` magnetic
-- `w` - relative weight: `l` light, `m` medium, `h` heavy, `a` adjustable (magnetic switches only)
+- `w` - approximate spring weight: `l` light, `m` medium, `h` heavy; `a` indicates adjustable actuation on magnetic switches, not an adjustable spring
+- `feel` - optional physical feel for a magnetic switch (`T` tactile); magnetic switches otherwise use linear feel here
 - `f` - family key, looks up its description in `DESCRIPTIONS` and its brand in `BRAND_OF`
 - `yours` - optional flag, marks Matticus's own switch (Kailh Box White)
 - `u` - optional flag, marks switches with unconfirmed specs (newer or boutique releases)
 
 ## Notes on accuracy
 
-Type and relative weight are reasonably confident based on standard naming conventions in the mechanical keyboard hobby. About 11 of the 100 switches are newer or boutique releases without solid public documentation, those are flagged with `u:1` and show a note in the popup rather than presenting a guess as fact.
+Manufacturer references are linked inside each popup through `PROFILE_SOURCES`. The sound and bump bars are qualitative expectations based on the mechanism and damping, not recordings, decibel measurements, or measured force curves. Keycaps, the keyboard case, plate, desk, and typing force all change the actual sound. Spring weight labels are approximate.
+
+Entries flagged with `u:1` have provisional specifications and show dashed, unconfirmed bars. `getProfile()` handles linear/tactile magnetic feel, silent designs, and the stronger click of Box Jade/Navy. Keep unknown variants unconfirmed until there is a reliable source or firsthand tester feedback.
+
+Magnetic keyboards can adjust the registration depth in software. That does not change their physical spring weight or tactile bump, and the passive tester has no electronics to demonstrate software features.
